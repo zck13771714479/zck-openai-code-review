@@ -105,7 +105,7 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>plus.gaga.middleware.sdk.OpenAiCodeReview</mainClass>
+                            <mainClass>com.openai.code.review.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
