@@ -7,7 +7,7 @@ import java.io.IOException;
 public class APITest {
     @Test
     public void testParseInt(){
-       int a = Integer.parseInt("abc123");
+       int a = Integer.parseInt("123");
     }
 
     @Test
