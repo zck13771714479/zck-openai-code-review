@@ -5,9 +5,9 @@ import org.junit.Test;
 import java.io.IOException;
 
 public class APITest {
-    @Test
+
     public void testParseInt(){
-       int a = Integer.parseInt("123");
+       int a = Integer.parseInt("123aabbcc");
     }
 
     @Test
@@ -18,6 +18,12 @@ public class APITest {
                 "    }";
         String s = Main.codeReview(diffCode);
         System.out.println("评审结果" + s);
+    }
+
+    @Test
+    public void testPushWXMessage() throws IOException {
+        String url = "https://github.com/zck13771714479/zck-openai-code-review-logs/blob/main/2024-12-30/Ul7qMmjCZxQs.md";
+        Main.pushWxNotification(url);
     }
 
 }

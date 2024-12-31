@@ -3,10 +3,10 @@ package com.openai.code.review.domain.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Message {
+public class WxTemplateMessageRequest {
 
-    private String touser = "or0Ab6ivwmypESVp_bYuk92T6SvU";
-    private String template_id = "GLlAM-Q4jdgsktdNd35hnEbHVam2mwsW2YWuxDhpQkU";
+    private String touser = "ouCDp626vpOiobgSUL8eAoGk0SSI";
+    private String template_id = "wYTIcLO7z-OFcTdOA5sO_q6v96BM59XMIqH3emW_5gc";
     private String url = "https://weixin.qq.com";
     private Map<String, Map<String, String>> data = new HashMap<>();
 

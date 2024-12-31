@@ -5,6 +5,8 @@ import com.openai.code.review.domain.constant.Constant;
 import com.openai.code.review.domain.model.ChatCompletionRequest;
 import com.openai.code.review.domain.model.ChatCompletionSyncResponse;
 import com.openai.code.review.domain.model.Model;
+import com.openai.code.review.domain.model.WxTemplateMessageRequest;
+import com.openai.code.review.domain.utils.WXAccessTokenUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -38,13 +40,57 @@ public class Main {
         String reviewResult = codeReview(diffCode.toString());
         System.out.println("评审结果：" + reviewResult);
         //3. 评审结果写入日志
-        String token =  System.getenv("GITHUB_TOKEN");
+        String token = System.getenv("GITHUB_TOKEN");
         if (token == null || token.isEmpty()) {
             System.out.println("Github token is empty");
             return;
         }
-        writeReviewResultLogs(token,reviewResult);
+        String logUrl = writeReviewResultLogs(token, reviewResult);
+        //4. 评审结果，微信通知
+        pushWxNotification(logUrl);
 
+    }
+
+    /**
+     * 评审结果推送微信通知
+     * @param logUrl
+     * @return
+     * @throws IOException
+     */
+    public static String pushWxNotification(String logUrl) throws IOException {
+        //获取access token
+        WXAccessTokenUtil.AccessToken accessToken = WXAccessTokenUtil.getAccessToken();
+        System.out.println("AccessToken: " + accessToken);
+        if (accessToken == null) {
+            return null;
+        }
+        //发送微信模板消息通知请求
+        WxTemplateMessageRequest messageRequest = new WxTemplateMessageRequest();
+        messageRequest.setUrl(logUrl);
+        messageRequest.put("project", "openai-code-review");
+        messageRequest.put("review", logUrl);
+        URL url = new URL(String.format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s", accessToken.getAccess_token()));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setRequestProperty("Content-Type", "application/json; utf-8");
+        connection.setRequestProperty("Accept", "application/json");
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
+        bufferedWriter.write(JSON.toJSONString(messageRequest));
+        bufferedWriter.flush();
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        StringBuilder builder = new StringBuilder();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                builder.append(line);
+            }
+            System.out.println("推送响应结果：" + builder.toString());
+        }
+        return builder.toString();
     }
 
     /**
@@ -124,7 +170,7 @@ public class Main {
         git.add().addFilepattern(folderName + "/" + fileName).call();
         git.commit().setMessage("Code Review Log").call();
         git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, "")).call();
-        return folderName + "/" + fileName;
+        return "https://github.com/zck13771714479/zck-openai-code-review-logs/blob/main" + folderName + "/" + fileName;
     }
 
     /**
