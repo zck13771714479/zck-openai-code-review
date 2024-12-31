@@ -170,7 +170,7 @@ public class Main {
         git.add().addFilepattern(folderName + "/" + fileName).call();
         git.commit().setMessage("Code Review Log").call();
         git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, "")).call();
-        return "https://github.com/zck13771714479/zck-openai-code-review-logs/blob/main" + folderName + "/" + fileName;
+        return "https://github.com/zck13771714479/zck-openai-code-review-logs/blob/main/" + folderName + "/" + fileName;
     }
 
     /**
