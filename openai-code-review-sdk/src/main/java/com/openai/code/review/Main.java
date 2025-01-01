@@ -1,12 +1,18 @@
 package com.openai.code.review;
 
 import com.alibaba.fastjson2.JSON;
-import com.openai.code.review.domain.constant.Constant;
-import com.openai.code.review.domain.model.ChatCompletionRequest;
-import com.openai.code.review.domain.model.ChatCompletionSyncResponse;
-import com.openai.code.review.domain.model.Model;
+import com.openai.code.review.constant.Constant;
+import com.openai.code.review.domain.service.CodeReviewService;
+import com.openai.code.review.domain.service.ICodeReviewService;
+import com.openai.code.review.infrastructure.git.GitCommand;
+import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
+import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
+import com.openai.code.review.infrastructure.llm.dto.ChatCompletionSyncResponse;
+import com.openai.code.review.domain.model.GLMModel;
 import com.openai.code.review.domain.model.WxTemplateMessageRequest;
-import com.openai.code.review.domain.utils.WXAccessTokenUtil;
+import com.openai.code.review.infrastructure.llm.impl.ChatGLM;
+import com.openai.code.review.infrastructure.weixin.WeiXin;
+import com.openai.code.review.utils.WXAccessTokenUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -21,38 +27,41 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, GitAPIException {
-        System.out.println("开始代码评审");
-        //1. 获取2次提交的不同 git diff
-        ProcessBuilder processBuilder = new ProcessBuilder("git", "diff", "HEAD~1", "HEAD");
-        processBuilder.directory(new File("."));
-        Process process = processBuilder.start();
+        //env在github中配置
+        GitCommand gitCommand = new GitCommand(
+                getEnv("LOG_REPOSITORY_URL"),
+                getEnv("PROJECT"),
+                getEnv("BRANCH"),
+                getEnv("AUTHOR"),
+                getEnv("COMMIT_MESSAGE"),
+                getEnv("GITHUB_TOKEN")
+        );
+        ILargeLanguageModel llm = new ChatGLM(
+                getEnv("API_URL"),
+                getEnv("API_KEY")
+        );
+        WeiXin weiXin = new WeiXin(
+                getEnv("APPID"),
+                getEnv("SECRET"),
+                getEnv("TOUSER"),
+                getEnv("TEMPLATE_ID")
+        );
+        ICodeReviewService codeReviewService = new CodeReviewService(gitCommand,llm,weiXin);
+        codeReviewService.exec();
+    }
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        StringBuilder diffCode = new StringBuilder();
-        while ((line = bufferedReader.readLine()) != null) {
-            diffCode.append(line);
+    public static String getEnv(String key) {
+        String value = System.getenv(key);
+        if (value == null || value.isEmpty()) {
+            System.out.println(key + " is empty");
+            return null;
         }
-        int exitValue = process.waitFor();
-        System.out.println("Exit value: " + exitValue);
-        System.out.println("Git diff " + diffCode.toString());
-        //2. AI代码自动评审
-        String reviewResult = codeReview(diffCode.toString());
-        System.out.println("评审结果：" + reviewResult);
-        //3. 评审结果写入日志
-        String token = System.getenv("GITHUB_TOKEN");
-        if (token == null || token.isEmpty()) {
-            System.out.println("Github token is empty");
-            return;
-        }
-        String logUrl = writeReviewResultLogs(token, reviewResult);
-        //4. 评审结果，微信通知
-        pushWxNotification(logUrl);
-
+        return value;
     }
 
     /**
      * 评审结果推送微信通知
+     *
      * @param logUrl
      * @return
      * @throws IOException
@@ -111,7 +120,7 @@ public class Main {
         httpURLConnection.setRequestProperty("Authorization", "Bearer " + Constant.API_KEY);
         // 设置模型，提示词
         ChatCompletionRequest chatCompletionRequest = new ChatCompletionRequest();
-        chatCompletionRequest.setModel(Model.GLM_4_FLASH.getCode());
+        chatCompletionRequest.setModel(GLMModel.GLM_4_FLASH.getCode());
         chatCompletionRequest.setMessages(new ArrayList<ChatCompletionRequest.Prompt>() {
             private static final long serialVersionUID = 545664644649799L;
 

@@ -1,4 +1,6 @@
-package com.openai.code.review.domain.model;
+package com.openai.code.review.infrastructure.llm.dto;
+
+import com.openai.code.review.domain.model.GLMModel;
 
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  */
 public class ChatCompletionRequest {
 
-    private String model = Model.GLM_4_FLASH.getCode();
+    private String model = GLMModel.GLM_4_FLASH.getCode();
     private List<Prompt> messages;
 
     public static class Prompt {

@@ -1,9 +1,9 @@
 package com.openai.code.review.domain.model;
 
 /**
- * 模型枚举
+ * ChatGLM模型枚举
  */
-public enum Model {
+public enum GLMModel {
 
     @Deprecated
     CHATGLM_6B_SSE("chatGLM_6b_SSE", "ChatGLM-6B 测试模型"),
@@ -27,7 +27,7 @@ public enum Model {
     private final String code;
     private final String info;
 
-    Model(String code, String info) {
+    GLMModel(String code, String info) {
         this.code = code;
         this.info = info;
     }

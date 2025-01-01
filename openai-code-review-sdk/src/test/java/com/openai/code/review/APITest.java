@@ -1,14 +1,24 @@
 package com.openai.code.review;
 
+import com.openai.code.review.domain.service.CodeReviewService;
+import com.openai.code.review.infrastructure.git.GitCommand;
 import org.junit.Test;
 
 import java.io.IOException;
 
 public class APITest {
 
-    public void testParseInt(){
-       int a = Integer.parseInt("123aabbcc");
+    public void testParseInt() {
+        int a = Integer.parseInt("123aabbcc");
     }
+
+//    @Test
+//    public void testDiffCode() {
+//        GitCommand gitCommand = new GitCommand("", "", "", "", "", "");
+//        CodeReviewService codeReviewService = new CodeReviewService(gitCommand, null, null);
+//        String diffCode = codeReviewService.getDiffCode();
+//        System.out.println(diffCode);
+//    }
 
     @Test
     public void testCodeReview() throws IOException {

@@ -3,10 +3,10 @@ name: Build and Run OpenAiCodeReview By Main Maven Jar
 on:
   push:
     branches:
-      - master
+      - '*'
   pull_request:
     branches:
-      - master
+      - '*'
 
 jobs:
   build:
@@ -30,7 +30,44 @@ jobs:
       - name: Copy openai-code-review-sdk JAR
         run: mvn dependency:copy -Dartifact=com.openai.code.review:openai-code-review-sdk:1.0 -DoutputDirectory=./libs
 
+      - name: Get repository name
+        id: repo-name
+        run: echo "PROJECT=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
+
+      - name: Get branch name
+        id: branch-name
+        run: echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Get commit author
+        id: commit-author
+        run: echo "AUTHOR=$(git log -1 --pretty=format:'%an <%ae>')" >> $GITHUB_ENV
+
+      - name: Get commit message
+        id: commit-message
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+      - name: Print repository, branch name, commit author, and commit message
+        run: |
+          echo "Repository name is ${{ env.PROJECT }}"
+          echo "Branch name is ${{ env.BRANCH }}"
+          echo "Commit author is ${{ env.AUTHOR }}"
+          echo "Commit message is ${{ env.COMMIT_MESSAGE }}"  
+
       - name: Run Code Review
         run: java -jar ./libs/openai-code-review-sdk-1.0.jar
         env:
+          # git配置
+          LOG_REPOSITORY_URL: ${{env.LOG_REPOSITORY_URL}}
+          PROJECT: ${{env.PROJECT}}
+          BRANCH: ${{env.BRANCH}}
+          AUTHOR: ${{env.AUTHOR}}
+          COMMIT_MESSAGE: ${{env.COMMIT_MESSAGE}}
           GITHUB_TOKEN: ${{ secrets.CODE_TOKEN }}
+          # llm配置
+          API_URL: ${{env.API_URL}}
+          API_KEY: ${{secrets.API_KEY}}
+          # 微信消息推送配置
+          APPID: ${{secrets.APPID}}
+          SECRET: ${{secrets.SECRET}}
+          TOUSER: ${{secrets.TOUSER}}
+          TEMPLATE_ID: ${{secrets.TEMPLATE_ID}}
