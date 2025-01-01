@@ -1,4 +1,5 @@
-name: Build and Run OpenAiCodeReview By Main Maven Jar
+# 下载远程LLM代码评审组件，并直接对本项目，对于任何项目都可以按照词action文件去配置使用
+name: Build and Run OpenAiCodeReview By Download remote code review sdk
 
 on:
   push:

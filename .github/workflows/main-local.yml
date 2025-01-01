@@ -1,3 +1,4 @@
+# 仅编译运行main方法文件，现已弃用，已main-remote为准
 name: Run Java Git Diff By Local
 
 on:
