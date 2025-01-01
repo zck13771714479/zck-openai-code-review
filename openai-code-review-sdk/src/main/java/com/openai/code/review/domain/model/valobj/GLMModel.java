@@ -1,4 +1,4 @@
-package com.openai.code.review.domain.model;
+package com.openai.code.review.domain.model.valobj;
 
 /**
  * ChatGLM模型枚举

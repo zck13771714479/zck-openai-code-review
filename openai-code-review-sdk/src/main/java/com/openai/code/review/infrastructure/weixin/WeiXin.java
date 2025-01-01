@@ -1,8 +1,6 @@
 package com.openai.code.review.infrastructure.weixin;
 
 import com.alibaba.fastjson2.JSON;
-import com.openai.code.review.domain.model.WxTemplateMessageRequest;
-import com.openai.code.review.domain.service.CodeReviewService;
 import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
 import com.openai.code.review.utils.WXAccessTokenUtil;
 import org.slf4j.Logger;
@@ -18,10 +16,10 @@ import java.net.URL;
 public class WeiXin {
     private final Logger logger = LoggerFactory.getLogger(WeiXin.class);
 
-    private String appid = "wx83124e4c316e9f4e";
-    private String secret = "5d403559eae7c593a6ece6c19f92c6d8";
-    private String touser = "ouCDp626vpOiobgSUL8eAoGk0SSI";
-    private String template_id = "PZEEfW9IbIqwIqlSYjADHjUK7xHwGMS7Y_XTOy7U7VQ";
+    private String appid;
+    private String secret;
+    private String touser;
+    private String template_id;
 
     public WeiXin(String appid, String secret, String touser, String template_id) {
         this.appid = appid;
@@ -29,7 +27,6 @@ public class WeiXin {
         this.touser = touser;
         this.template_id = template_id;
     }
-
 
 
     /**

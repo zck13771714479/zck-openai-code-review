@@ -19,8 +19,8 @@ public class ChatGLM implements ILargeLanguageModel {
 
     private final Logger logger = LoggerFactory.getLogger(WeiXin.class);
 
-    private  String API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
-    private  String API_KEY = "e9d317d6c65a1bb087cc653ef3dd9884.J75wUkQz21iPZQJL";
+    private String API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+    private String API_KEY = "";
 
     public ChatGLM(String API_URL, String API_KEY) {
         this.API_URL = API_URL;
@@ -30,6 +30,7 @@ public class ChatGLM implements ILargeLanguageModel {
 
     /**
      * 向LLM发送请求
+     *
      * @param request
      * @return
      * @throws IOException

@@ -1,6 +1,5 @@
 package com.openai.code.review.infrastructure.git;
 
-import com.openai.code.review.constant.Constant;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -18,7 +17,7 @@ import java.util.Random;
 public class GitCommand {
     private final Logger logger = LoggerFactory.getLogger(GitCommand.class);
 
-    private String reviewLogRepoURI = Constant.LOG_REPOSITORY_URI;
+    private String reviewLogRepoURI;
     /**
      * 项目名称
      */

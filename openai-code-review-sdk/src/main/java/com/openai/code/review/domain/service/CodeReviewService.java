@@ -1,6 +1,6 @@
 package com.openai.code.review.domain.service;
 
-import com.openai.code.review.domain.model.GLMModel;
+import com.openai.code.review.domain.model.valobj.GLMModel;
 import com.openai.code.review.infrastructure.git.GitCommand;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
@@ -91,6 +91,7 @@ public class CodeReviewService extends AbstractCodeReviewService {
             templateMessageDTO.put(TemplateMessageDTO.TemplateKey.AUTHOR.getCode(), gitCommand.getAuthor());
             templateMessageDTO.put(TemplateMessageDTO.TemplateKey.COMMIT_MESSAGE.getCode(), gitCommand.getCommitMessage());
             templateMessageDTO.put(TemplateMessageDTO.TemplateKey.REVIEW.getCode(), logUrl);
+            templateMessageDTO.setUrl(logUrl);
             weiXin.pushTemplateMessage(templateMessageDTO);
         } catch (IOException e) {
             logger.error("推送微信通知失败");

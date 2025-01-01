@@ -1,6 +1,6 @@
 package com.openai.code.review.infrastructure.llm.dto;
 
-import com.openai.code.review.domain.model.GLMModel;
+import com.openai.code.review.domain.model.valobj.GLMModel;
 
 import java.util.List;
 

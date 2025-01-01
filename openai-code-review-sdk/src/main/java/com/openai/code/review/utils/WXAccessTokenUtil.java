@@ -13,6 +13,8 @@ import java.net.URL;
  * 获取access token的文档https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
  */
 public class WXAccessTokenUtil {
+    //常量为默认的，需要使用时通过外部调用参数传递，或者可以修改为自己的
+
 
     //appid和appsecret的获取https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
     private static final String CLIENT_CREDENTIAL = "client_credential";
