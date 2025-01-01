@@ -57,14 +57,14 @@ jobs:
         run: java -jar ./libs/openai-code-review-sdk-1.0.jar
         env:
           # git配置
-          LOG_REPOSITORY_URL: ${{env.LOG_REPOSITORY_URL}}
+          LOG_REPOSITORY_URL: ${{vars.LOG_REPOSITORY_URL}}
           PROJECT: ${{env.PROJECT}}
           BRANCH: ${{env.BRANCH}}
           AUTHOR: ${{env.AUTHOR}}
           COMMIT_MESSAGE: ${{env.COMMIT_MESSAGE}}
           GITHUB_TOKEN: ${{ secrets.CODE_TOKEN }}
           # llm配置
-          API_URL: ${{env.API_URL}}
+          API_URL: ${{vars.API_URL}}
           API_KEY: ${{secrets.API_KEY}}
           # 微信消息推送配置
           APPID: ${{secrets.APPID}}
