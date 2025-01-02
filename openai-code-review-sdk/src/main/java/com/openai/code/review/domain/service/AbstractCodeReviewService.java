@@ -1,5 +1,6 @@
 package com.openai.code.review.domain.service;
 
+import com.openai.code.review.infrastructure.git.BaseGitOperation;
 import com.openai.code.review.infrastructure.git.GitCommand;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.weixin.WeiXin;
@@ -8,11 +9,13 @@ import java.io.IOException;
 
 public abstract class AbstractCodeReviewService implements ICodeReviewService {
 
+    protected BaseGitOperation baseGitOperation;
     protected GitCommand gitCommand;
     protected ILargeLanguageModel llm;
     protected WeiXin weiXin;
 
-    public AbstractCodeReviewService(GitCommand gitCommand, ILargeLanguageModel llm, WeiXin weiXin) {
+    public AbstractCodeReviewService(BaseGitOperation baseGitOperation,GitCommand gitCommand, ILargeLanguageModel llm, WeiXin weiXin) {
+        this.baseGitOperation = baseGitOperation;
         this.gitCommand = gitCommand;
         this.llm = llm;
         this.weiXin = weiXin;

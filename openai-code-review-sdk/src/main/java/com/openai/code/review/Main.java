@@ -2,7 +2,9 @@ package com.openai.code.review;
 
 import com.openai.code.review.domain.service.CodeReviewService;
 import com.openai.code.review.domain.service.ICodeReviewService;
+import com.openai.code.review.infrastructure.git.BaseGitOperation;
 import com.openai.code.review.infrastructure.git.GitCommand;
+import com.openai.code.review.infrastructure.git.GitRestAPI;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.impl.ChatGLM;
 import com.openai.code.review.infrastructure.weixin.WeiXin;
@@ -22,6 +24,15 @@ public class Main {
                 getEnv("COMMIT_MESSAGE"),
                 getEnv("GITHUB_TOKEN")
         );
+        BaseGitOperation baseGitOperation = new GitRestAPI(
+                getEnv("LOG_REPOSITORY_URL"),
+                getEnv("PROJECT"),
+                getEnv("BRANCH"),
+                getEnv("AUTHOR"),
+                getEnv("COMMIT_MESSAGE"),
+                getEnv("GITHUB_TOKEN"),
+                "https://api.github.com/repos/zck13771714479/zck-openai-code-review/commits/feat-commit-api"
+        );
         ILargeLanguageModel llm = new ChatGLM(
                 getEnv("API_URL"),
                 getEnv("API_KEY")
@@ -32,7 +43,7 @@ public class Main {
                 getEnv("TOUSER"),
                 getEnv("TEMPLATE_ID")
         );
-        ICodeReviewService codeReviewService = new CodeReviewService(gitCommand,llm,weiXin);
+        ICodeReviewService codeReviewService = new CodeReviewService(baseGitOperation, gitCommand, llm, weiXin);
         codeReviewService.exec();
     }
 

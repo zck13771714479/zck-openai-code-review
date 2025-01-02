@@ -1,6 +1,7 @@
 package com.openai.code.review.domain.service;
 
 import com.openai.code.review.domain.model.valobj.GLMModel;
+import com.openai.code.review.infrastructure.git.BaseGitOperation;
 import com.openai.code.review.infrastructure.git.GitCommand;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
@@ -17,8 +18,9 @@ public class CodeReviewService extends AbstractCodeReviewService {
 
     private final Logger logger = LoggerFactory.getLogger(CodeReviewService.class);
 
-    public CodeReviewService(GitCommand gitCommand, ILargeLanguageModel llm, WeiXin weiXin) {
-        super(gitCommand, llm, weiXin);
+
+    public CodeReviewService(BaseGitOperation baseGitOperation, GitCommand gitCommand, ILargeLanguageModel llm, WeiXin weiXin) {
+        super(baseGitOperation, gitCommand, llm, weiXin);
     }
 
     /**
@@ -29,7 +31,8 @@ public class CodeReviewService extends AbstractCodeReviewService {
     @Override
     protected String getDiffCode() {
         try {
-            return gitCommand.getDiffCode();
+           return baseGitOperation.getDiffCode();
+//            return gitCommand.getDiffCode();
         } catch (IOException e) {
             logger.error("获取不同代码出错");
             throw new RuntimeException(e);

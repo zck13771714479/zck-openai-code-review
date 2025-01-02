@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * git命令交互
  */
-public class GitCommand {
+public class GitCommand implements BaseGitOperation {
     private final Logger logger = LoggerFactory.getLogger(GitCommand.class);
 
     private String reviewLogRepoURI;
@@ -55,6 +55,7 @@ public class GitCommand {
      * @return
      * @throws IOException
      */
+    @Override
     public String getDiffCode() throws IOException {
         //1. 统计分支提交次数
         ProcessBuilder countProcessBuilder = new ProcessBuilder("git", "rev-list", "--count", "HEAD");
