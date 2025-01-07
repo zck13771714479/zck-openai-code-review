@@ -3,6 +3,7 @@ package com.openai.code.review;
 import com.openai.code.review.domain.service.CodeReviewService;
 import com.openai.code.review.domain.service.ICodeReviewService;
 import com.openai.code.review.infrastructure.git.GitCommand;
+import com.openai.code.review.infrastructure.git.IBaseGitOperation;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.impl.ChatGLM;
 import com.openai.code.review.infrastructure.weixin.WeiXin;
@@ -16,12 +17,14 @@ public class Main {
         //对于需要评审的github代码仓库，先在其中配置正确的variables或者secrets
         //仓库的settings-> Secrets and variables -> Actions
         GitCommand gitCommand = new GitCommand(
-                EnvUtils.getEnv("LOG_REPOSITORY_URL"),
                 EnvUtils.getEnv("PROJECT"),
                 EnvUtils.getEnv("BRANCH"),
                 EnvUtils.getEnv("AUTHOR"),
                 EnvUtils.getEnv("COMMIT_MESSAGE"),
-                EnvUtils.getEnv("GITHUB_TOKEN")
+                EnvUtils.getEnv("GITHUB_TOKEN"),
+                EnvUtils.getEnv("WRITE_TYPE"),
+                EnvUtils.getEnv("COMMIT_SHA"),
+                EnvUtils.getEnv("OWNER")
         );
         ILargeLanguageModel llm = new ChatGLM(
                 EnvUtils.getEnv("API_URL"),

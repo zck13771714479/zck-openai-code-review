@@ -1,5 +1,6 @@
 package com.openai.code.review.infrastructure.git;
 
+import com.openai.code.review.utils.EnvUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -14,10 +15,10 @@ import java.util.Random;
 /**
  * git命令交互
  */
-public class GitCommand {
+public class GitCommand implements IBaseGitOperation {
     private final Logger logger = LoggerFactory.getLogger(GitCommand.class);
 
-    private String reviewLogRepoURI;
+    private String reviewLogRepoURI = EnvUtils.getEnv("LOG_REPOSITORY_URL");
     /**
      * 项目名称
      */
@@ -39,15 +40,32 @@ public class GitCommand {
      */
     private String githubToken;
 
+    /**
+     * 写入日志的方式
+     */
+    private String writeType;
 
-    public GitCommand(String reviewLogRepoURI, String project, String branch, String author, String commitMessage, String githubToken) {
-        this.reviewLogRepoURI = reviewLogRepoURI;
+    /**
+     * 提交的sha码
+     */
+    private String commitSHA;
+
+    /**
+     * 仓库拥有者
+     */
+    private String owner;
+
+    public GitCommand(String project, String branch, String author, String commitMessage, String githubToken, String writeType, String commitSHA, String owner) {
         this.project = project;
         this.branch = branch;
         this.author = author;
         this.commitMessage = commitMessage;
         this.githubToken = githubToken;
+        this.writeType = writeType;
+        this.commitSHA = commitSHA;
+        this.owner = owner;
     }
+
 
     /**
      * 获取2次提交的不同代码
@@ -84,33 +102,39 @@ public class GitCommand {
     }
 
     /**
-     * push评审日志
+     * 写入评审日志到特定git仓库
+     *
      * @param reviewResult
      * @return
      * @throws GitAPIException
      */
-    public String commitAndPush(String reviewResult) throws GitAPIException {
-        Git git = Git.cloneRepository()
-                .setURI(this.reviewLogRepoURI + ".git")
-                .setDirectory(new File("repo"))
-                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.githubToken, ""))
-                .call();
-        String folderName = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        File folder = new File("repo/" + folderName);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        String fileName = this.project + "-" + this.branch + "-" + this.author + "-" + this.generateRandomName(4) + ".md";
-        File logFile = new File(folder, fileName);
-        try (FileWriter writer = new FileWriter(logFile)) {
-            writer.write(reviewResult);
-        } catch (IOException e) {
+    @Override
+    public String writeResult(String reviewResult) {
+        try {
+            Git git = Git.cloneRepository()
+                    .setURI(this.reviewLogRepoURI + ".git")
+                    .setDirectory(new File("repo"))
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.githubToken, ""))
+                    .call();
+            String folderName = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            File folder = new File("repo/" + folderName);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+            String fileName = this.project + "-" + this.branch + "-" + this.author + "-" + this.generateRandomName(4) + ".md";
+            File logFile = new File(folder, fileName);
+            try (FileWriter writer = new FileWriter(logFile)) {
+                writer.write(reviewResult);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            git.add().addFilepattern(folderName + "/" + fileName).call();
+            git.commit().setMessage("Code Review Log").call();
+            git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.githubToken, "")).call();
+            return this.reviewLogRepoURI + "/blob/main/" + folderName + "/" + fileName;
+        } catch (GitAPIException e) {
             throw new RuntimeException(e);
         }
-        git.add().addFilepattern(folderName + "/" + fileName).call();
-        git.commit().setMessage("Code Review Log").call();
-        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(this.githubToken, "")).call();
-        return this.reviewLogRepoURI + "/blob/main/" + folderName + "/" + fileName;
     }
 
     private String generateRandomName(int length) {
@@ -169,5 +193,29 @@ public class GitCommand {
 
     public void setGithubToken(String githubToken) {
         this.githubToken = githubToken;
+    }
+
+    public String getWriteType() {
+        return writeType;
+    }
+
+    public void setWriteType(String writeType) {
+        this.writeType = writeType;
+    }
+
+    public String getCommitSHA() {
+        return commitSHA;
+    }
+
+    public void setCommitSHA(String commitSHA) {
+        this.commitSHA = commitSHA;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

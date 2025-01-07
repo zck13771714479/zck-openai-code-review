@@ -2,10 +2,13 @@ package com.openai.code.review.domain.service;
 
 import com.openai.code.review.domain.model.valobj.GLMModel;
 import com.openai.code.review.infrastructure.git.GitCommand;
+import com.openai.code.review.infrastructure.git.strategy.IWriteResultStrategy;
+import com.openai.code.review.infrastructure.git.strategy.WriteResultStrategyFactory;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
 import com.openai.code.review.infrastructure.weixin.WeiXin;
 import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
+import com.openai.code.review.utils.EnvUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +72,12 @@ public class CodeReviewService extends AbstractCodeReviewService {
     @Override
     protected String writeLog(String reviewResult) {
         try {
-            return gitCommand.commitAndPush(reviewResult);
-        } catch (GitAPIException e) {
+            //运用策略模式将评审结果写入日志
+            String writeType = EnvUtils.getEnv("WRITE_TYPE");
+            IWriteResultStrategy strategy = WriteResultStrategyFactory.getStrategy(writeType);
+            strategy.initialData();
+            return strategy.writeResult(reviewResult);
+        } catch (Exception e) {
             logger.error("写入日志仓库失败");
             throw new RuntimeException(e);
         }

@@ -1,7 +1,5 @@
 package com.openai.code.review.utils;
 
-import com.alibaba.fastjson2.JSON;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;

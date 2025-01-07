@@ -35,6 +35,14 @@ jobs:
         id: repo-name
         run: echo "PROJECT=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
 
+      - name: Get owner name
+        id: owner-name
+        run: echo "OWNER=${GITHUB_REPOSITORY%%/*}" >> $GITHUB_ENV
+
+      - name: Get commit SHA
+        id: commit-sha
+        run: echo "COMMIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+
       - name: Get branch name
         id: branch-name
         run: echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
@@ -47,12 +55,19 @@ jobs:
         id: commit-message
         run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
 
+      - name: Print github api rul
+        id: github-api-url
+        run: echo "GitHub API URL is $GITHUB_API_URL"
+
       - name: Print repository, branch name, commit author, and commit message
         run: |
           echo "Repository name is ${{ env.PROJECT }}"
           echo "Branch name is ${{ env.BRANCH }}"
           echo "Commit author is ${{ env.AUTHOR }}"
           echo "Commit message is ${{ env.COMMIT_MESSAGE }}"  
+          echo "Owner name is ${{env.OWNER}}"
+          echo "Commit sha is ${{env.COMMIT_SHA}}"
+          echo "GitHub API URL is $GITHUB_API_URL"
 
       - name: Run Code Review
         run: java -jar ./libs/openai-code-review-sdk-1.0.jar
@@ -64,6 +79,9 @@ jobs:
           AUTHOR: ${{env.AUTHOR}}
           COMMIT_MESSAGE: ${{env.COMMIT_MESSAGE}}
           GITHUB_TOKEN: ${{ secrets.CODE_TOKEN }}
+          OWNER: ${{env.OWNER}}
+          COMMIT_SHA: ${{env.COMMIT_SHA}}
+          WRITE_TYPE: ${{vars.WRITE_TYPE}}
           # llm配置
           API_URL: ${{vars.API_URL}}
           API_KEY: ${{secrets.API_KEY}}
