@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 获取微信access token的工具类
@@ -35,27 +37,12 @@ public class WXAccessTokenUtil {
      * @throws IOException
      */
     public static AccessToken getAccessToken(String appid, String secret) throws IOException {
-        URL url = new URL(String.format(URL_TEMPLATE, CLIENT_CREDENTIAL, appid, secret));
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.setRequestProperty("Accept", "application/json");
-        connection.setDoInput(true);
-        connection.connect();
-
-        int responseCode = connection.getResponseCode();
-        System.out.println("Get WX access token responseCode:" + responseCode);
-        StringBuilder result = new StringBuilder();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = br.readLine()) != null) {
-                result.append(line);
-            }
-            return JSON.parseObject(result.toString(), AccessToken.class);
-        }
-        System.out.println("access token fail");
-        return null;
+        String url = String.format(URL_TEMPLATE, CLIENT_CREDENTIAL, appid, secret);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Content-Type", "application/x-www-form-urlencoded");
+        params.put("Accept", "application/json");
+        String response = DefaultHttpUtils.executeGetRequest(url, params);
+        return JSON.parseObject(response, AccessToken.class);
     }
 
     public static class AccessToken {
