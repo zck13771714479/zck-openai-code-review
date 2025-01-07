@@ -1,13 +1,13 @@
-# sdk文件打jar包并且运行，供开发本组件时使用，现已使用远程下载方式
+# sdk文件打jar包并且运行，供开发本组件时使用，生产部署时使用远程下载方式
 name: Build and Run OpenAiCodeReview By Main Maven Jar
 
 on:
   push:
     branches:
-      - master-close
+      - '*'
   pull_request:
     branches:
-      - master-close
+      - '*'
 
 jobs:
   build:
