@@ -66,8 +66,8 @@ public class GitRestAPI implements IBaseGitOperation {
     @Override
     public String writeResult(String reviewResult) {
         // github comment url: https://api.github.com/repos/{owner}/{repo}/commits/{commit_sha}/comments
-        String url = EnvUtils.getEnv("GITHUB_API_URL") + "/repo/" + this.owner + "/"
-                + this.project + "/commits/" + this.commitSHA + "/comment";
+        String url = EnvUtils.getEnv("GITHUB_API_URL") + "/repos/" + this.owner + "/"
+                + this.project + "/commits/" + this.commitSHA + "/comments";
         Map<String, String> params = new HashMap<String, String>();
         params.put("Accept", "application/vnd.github+json");
         params.put("Content-Type", "application/json");
