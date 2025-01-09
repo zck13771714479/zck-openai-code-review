@@ -93,7 +93,7 @@ public class CodeReviewService extends AbstractCodeReviewService {
     @Override
     protected void pushNotification(String logUrl) {
         try {
-            INotificationStrategy notificationStrategy = NotificationFactory.getStrategy(EnvUtils.getEnv("NOTIFICATION_TYPE"));
+            INotificationStrategy notificationStrategy = NotificationFactory.getStrategy("weixin");
             notificationStrategy.initData();
             notificationStrategy.sendNotificationMessage(logUrl);
         } catch (Exception e) {
