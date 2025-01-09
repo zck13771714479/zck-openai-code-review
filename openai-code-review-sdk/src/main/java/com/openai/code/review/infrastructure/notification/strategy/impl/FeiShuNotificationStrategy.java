@@ -1,5 +1,6 @@
 package com.openai.code.review.infrastructure.notification.strategy.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.openai.code.review.infrastructure.notification.feishu.FeiShu;
 import com.openai.code.review.infrastructure.notification.feishu.dto.TextMessageRequestDTO;
 import com.openai.code.review.infrastructure.notification.strategy.INotificationStrategy;
@@ -36,6 +37,7 @@ public class FeiShuNotificationStrategy implements INotificationStrategy {
         TextMessageRequestDTO textMessageRequestDTO = new TextMessageRequestDTO();
         textMessageRequestDTO.setMsgType("text");
         textMessageRequestDTO.setContent(new TextMessageRequestDTO.Content(message));
+        System.out.println("方法 sendNotificationMessage：" + JSON.toJSONString(textMessageRequestDTO));
         return this.feiShu.pushFeiShuMessage(textMessageRequestDTO);
     }
 

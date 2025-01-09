@@ -32,6 +32,8 @@ public class FeiShu {
      */
     public String pushFeiShuMessage(TextMessageRequestDTO requestDTO){
         String requestUrl = this.url + "/" + this.webhook;
+        System.out.println(requestUrl);
+        System.out.println(JSON.toJSONString(requestDTO));
         return DefaultHttpUtils.executePostRequest(requestUrl,new HashMap<String,String>(), JSON.toJSONString(requestDTO));
     }
 
