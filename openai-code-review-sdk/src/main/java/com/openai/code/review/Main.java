@@ -3,10 +3,8 @@ package com.openai.code.review;
 import com.openai.code.review.domain.service.CodeReviewService;
 import com.openai.code.review.domain.service.ICodeReviewService;
 import com.openai.code.review.infrastructure.git.GitCommand;
-import com.openai.code.review.infrastructure.git.IBaseGitOperation;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.impl.ChatGLM;
-import com.openai.code.review.infrastructure.weixin.WeiXin;
 import com.openai.code.review.utils.EnvUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 

@@ -4,14 +4,12 @@ import com.alibaba.fastjson2.JSON;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionSyncResponse;
-import com.openai.code.review.infrastructure.weixin.WeiXin;
+import com.openai.code.review.infrastructure.notification.weixin.WeiXin;
 import com.openai.code.review.utils.DefaultHttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 

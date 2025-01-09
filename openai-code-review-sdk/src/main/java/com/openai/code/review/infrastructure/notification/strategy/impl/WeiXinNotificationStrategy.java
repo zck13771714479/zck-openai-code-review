@@ -1,8 +1,8 @@
 package com.openai.code.review.infrastructure.notification.strategy.impl;
 
 import com.openai.code.review.infrastructure.notification.strategy.INotificationStrategy;
-import com.openai.code.review.infrastructure.weixin.WeiXin;
-import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
+import com.openai.code.review.infrastructure.notification.weixin.WeiXin;
+import com.openai.code.review.infrastructure.notification.weixin.dto.TemplateMessageDTO;
 import com.openai.code.review.utils.EnvUtils;
 
 import java.io.IOException;

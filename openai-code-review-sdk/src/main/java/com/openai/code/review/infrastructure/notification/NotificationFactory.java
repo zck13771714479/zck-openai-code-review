@@ -1,6 +1,7 @@
 package com.openai.code.review.infrastructure.notification;
 
 import com.openai.code.review.infrastructure.notification.strategy.INotificationStrategy;
+import com.openai.code.review.infrastructure.notification.strategy.impl.FeiShuNotificationStrategy;
 import com.openai.code.review.infrastructure.notification.strategy.impl.WeiXinNotificationStrategy;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class NotificationFactory {
 
     static {
         strategyMap.put(new WeiXinNotificationStrategy().typeName(), new WeiXinNotificationStrategy());
+        strategyMap.put(new FeiShuNotificationStrategy().typeName(), new FeiShuNotificationStrategy());
     }
 
     public static INotificationStrategy getStrategy(String notificationType) {

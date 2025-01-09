@@ -1,4 +1,4 @@
-package com.openai.code.review.infrastructure.weixin.dto;
+package com.openai.code.review.infrastructure.notification.weixin.dto;
 
 import java.util.HashMap;
 import java.util.Map;

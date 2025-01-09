@@ -2,7 +2,6 @@ package com.openai.code.review.domain.service;
 
 import com.openai.code.review.infrastructure.git.GitCommand;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
-import com.openai.code.review.infrastructure.weixin.WeiXin;
 
 import java.io.IOException;
 

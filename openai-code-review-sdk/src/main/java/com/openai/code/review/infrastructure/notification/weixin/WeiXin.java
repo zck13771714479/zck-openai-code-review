@@ -1,15 +1,13 @@
-package com.openai.code.review.infrastructure.weixin;
+package com.openai.code.review.infrastructure.notification.weixin;
 
 import com.alibaba.fastjson2.JSON;
-import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
+import com.openai.code.review.infrastructure.notification.weixin.dto.TemplateMessageDTO;
 import com.openai.code.review.utils.DefaultHttpUtils;
 import com.openai.code.review.utils.WXAccessTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 

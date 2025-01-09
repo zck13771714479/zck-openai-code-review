@@ -8,10 +8,7 @@ import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
 import com.openai.code.review.infrastructure.notification.NotificationFactory;
 import com.openai.code.review.infrastructure.notification.strategy.INotificationStrategy;
-import com.openai.code.review.infrastructure.weixin.WeiXin;
-import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
 import com.openai.code.review.utils.EnvUtils;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +90,7 @@ public class CodeReviewService extends AbstractCodeReviewService {
     @Override
     protected void pushNotification(String logUrl) {
         try {
-            INotificationStrategy notificationStrategy = NotificationFactory.getStrategy("weixin");
+            INotificationStrategy notificationStrategy = NotificationFactory.getStrategy(EnvUtils.getEnv("NOTIFICATION_TYPE"));
             notificationStrategy.initData();
             notificationStrategy.sendNotificationMessage(logUrl);
         } catch (Exception e) {
