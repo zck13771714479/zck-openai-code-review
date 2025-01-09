@@ -10,12 +10,11 @@ public abstract class AbstractCodeReviewService implements ICodeReviewService {
 
     protected GitCommand gitCommand;
     protected ILargeLanguageModel llm;
-    protected WeiXin weiXin;
 
-    public AbstractCodeReviewService(GitCommand gitCommand, ILargeLanguageModel llm, WeiXin weiXin) {
+
+    public AbstractCodeReviewService(GitCommand gitCommand, ILargeLanguageModel llm) {
         this.gitCommand = gitCommand;
         this.llm = llm;
-        this.weiXin = weiXin;
     }
 
     /**
@@ -26,7 +25,7 @@ public abstract class AbstractCodeReviewService implements ICodeReviewService {
         String diffCode = this.getDiffCode();
         String reviewResult = this.codeReview(diffCode);
         String logUrl = this.writeLog(reviewResult);
-        this.pushWxNotification(logUrl);
+        this.pushNotification(logUrl);
     }
 
 
@@ -56,11 +55,11 @@ public abstract class AbstractCodeReviewService implements ICodeReviewService {
 
 
     /**
-     * 推送微信公众号通知，模板消息
+     * 推送通知
      *
      * @param logUrl
      */
-    protected abstract void pushWxNotification(String logUrl);
+    protected abstract void pushNotification(String logUrl);
 
 
 }

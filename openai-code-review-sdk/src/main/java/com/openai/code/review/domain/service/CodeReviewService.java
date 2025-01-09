@@ -6,6 +6,8 @@ import com.openai.code.review.infrastructure.git.strategy.IWriteResultStrategy;
 import com.openai.code.review.infrastructure.git.strategy.WriteResultStrategyFactory;
 import com.openai.code.review.infrastructure.llm.ILargeLanguageModel;
 import com.openai.code.review.infrastructure.llm.dto.ChatCompletionRequest;
+import com.openai.code.review.infrastructure.notification.NotificationFactory;
+import com.openai.code.review.infrastructure.notification.strategy.INotificationStrategy;
 import com.openai.code.review.infrastructure.weixin.WeiXin;
 import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
 import com.openai.code.review.utils.EnvUtils;
@@ -20,8 +22,8 @@ public class CodeReviewService extends AbstractCodeReviewService {
 
     private final Logger logger = LoggerFactory.getLogger(CodeReviewService.class);
 
-    public CodeReviewService(GitCommand gitCommand, ILargeLanguageModel llm, WeiXin weiXin) {
-        super(gitCommand, llm, weiXin);
+    public CodeReviewService(GitCommand gitCommand, ILargeLanguageModel llm) {
+        super(gitCommand, llm);
     }
 
     /**
@@ -89,19 +91,13 @@ public class CodeReviewService extends AbstractCodeReviewService {
      * @param logUrl
      */
     @Override
-    protected void pushWxNotification(String logUrl) {
+    protected void pushNotification(String logUrl) {
         try {
-            //设置代码相关信息到模板消息
-            TemplateMessageDTO templateMessageDTO = new TemplateMessageDTO(weiXin.getTouser(), weiXin.getTemplate_id());
-            templateMessageDTO.put(TemplateMessageDTO.TemplateKey.PROJECT.getCode(), gitCommand.getProject());
-            templateMessageDTO.put(TemplateMessageDTO.TemplateKey.BRANCH.getCode(), gitCommand.getBranch());
-            templateMessageDTO.put(TemplateMessageDTO.TemplateKey.AUTHOR.getCode(), gitCommand.getAuthor());
-            templateMessageDTO.put(TemplateMessageDTO.TemplateKey.COMMIT_MESSAGE.getCode(), gitCommand.getCommitMessage());
-            templateMessageDTO.put(TemplateMessageDTO.TemplateKey.REVIEW.getCode(), logUrl);
-            templateMessageDTO.setUrl(logUrl);
-            weiXin.pushTemplateMessage(templateMessageDTO);
-        } catch (IOException e) {
-            logger.error("推送微信通知失败");
+            INotificationStrategy notificationStrategy = NotificationFactory.getStrategy(EnvUtils.getEnv("NOTIFICATION_TYPE"));
+            notificationStrategy.initData();
+            notificationStrategy.sendNotificationMessage(logUrl);
+        } catch (Exception e) {
+            logger.error("推送通知失败");
             throw new RuntimeException(e);
         }
     }

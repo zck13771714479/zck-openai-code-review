@@ -90,3 +90,5 @@ jobs:
           SECRET: ${{secrets.SECRET}}
           TOUSER: ${{secrets.TOUSER}}
           TEMPLATE_ID: ${{secrets.TEMPLATE_ID}}
+          # 通知设置
+          NOTIFICATION_TYPE: weixin

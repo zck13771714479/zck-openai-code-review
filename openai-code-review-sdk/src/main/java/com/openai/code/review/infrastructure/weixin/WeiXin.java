@@ -2,6 +2,7 @@ package com.openai.code.review.infrastructure.weixin;
 
 import com.alibaba.fastjson2.JSON;
 import com.openai.code.review.infrastructure.weixin.dto.TemplateMessageDTO;
+import com.openai.code.review.utils.DefaultHttpUtils;
 import com.openai.code.review.utils.WXAccessTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 微信公众平台交互
@@ -43,28 +46,11 @@ public class WeiXin {
         if (accessToken == null) {
             return null;
         }
-        URL url = new URL(String.format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s", accessToken.getAccess_token()));
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.setRequestProperty("Content-Type", "application/json; utf-8");
-        connection.setRequestProperty("Accept", "application/json");
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-        bufferedWriter.write(JSON.toJSONString(request));
-        bufferedWriter.flush();
-        connection.connect();
-        int responseCode = connection.getResponseCode();
-        StringBuilder builder = new StringBuilder();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                builder.append(line);
-            }
-            logger.info("推送通知响应结果：" + builder.toString());
-        }
-        return builder.toString();
+        String url = String.format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s", accessToken.getAccess_token());
+        Map<String, String> params = new HashMap<>();
+        params.put("Content-Type", "application/json; utf-8");
+        params.put("Accept", "application/json");
+        return DefaultHttpUtils.executePostRequest(url, params, JSON.toJSONString(request));
     }
 
 

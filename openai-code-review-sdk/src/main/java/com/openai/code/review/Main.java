@@ -30,13 +30,7 @@ public class Main {
                 EnvUtils.getEnv("API_URL"),
                 EnvUtils.getEnv("API_KEY")
         );
-        WeiXin weiXin = new WeiXin(
-                EnvUtils.getEnv("APPID"),
-                EnvUtils.getEnv("SECRET"),
-                EnvUtils.getEnv("TOUSER"),
-                EnvUtils.getEnv("TEMPLATE_ID")
-        );
-        ICodeReviewService codeReviewService = new CodeReviewService(gitCommand,llm,weiXin);
+        ICodeReviewService codeReviewService = new CodeReviewService(gitCommand,llm);
         codeReviewService.exec();
     }
 
