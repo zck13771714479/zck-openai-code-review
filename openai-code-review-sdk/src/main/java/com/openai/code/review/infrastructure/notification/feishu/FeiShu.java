@@ -27,14 +27,17 @@ public class FeiShu {
 
     /**
      * 发送飞书消息
+     *
      * @param requestDTO
      * @return
      */
-    public String pushFeiShuMessage(TextMessageRequestDTO requestDTO){
+    public String pushFeiShuMessage(TextMessageRequestDTO requestDTO) {
         String requestUrl = this.url + "/" + this.webhook;
         System.out.println(requestUrl);
         System.out.println(JSON.toJSONString(requestDTO));
-        return DefaultHttpUtils.executePostRequest(requestUrl,new HashMap<String,String>(), JSON.toJSONString(requestDTO));
+        String response = DefaultHttpUtils.executePostRequest(requestUrl, new HashMap<String, String>(), JSON.toJSONString(requestDTO));
+        System.out.println("response: " + response);
+        return response;
     }
 
     public String getWebhook() {
