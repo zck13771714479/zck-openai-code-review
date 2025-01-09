@@ -91,7 +91,6 @@ jobs:
           TOUSER: ${{secrets.TOUSER}}
           TEMPLATE_ID: ${{secrets.TEMPLATE_ID}}
           # 飞书消息推送配置
-          FEISHU_URL: ${{vars.FEISHU_URL}}
           FEISHU_WEBHOOK: ${{secrets.FEISHU_WEBHOOK}}
           # 通知设置
           NOTIFICATION_TYPE: feishu

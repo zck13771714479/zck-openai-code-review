@@ -22,7 +22,7 @@ public class FeiShuNotificationStrategy implements INotificationStrategy {
      */
     @Override
     public void initData() {
-        this.feiShu = new FeiShu(EnvUtils.getEnv("FEISHU_URL"), EnvUtils.getEnv("FEISHU_WEBHOOK"));
+        this.feiShu = new FeiShu(EnvUtils.getEnv("FEISHU_WEBHOOK"));
     }
 
     /**

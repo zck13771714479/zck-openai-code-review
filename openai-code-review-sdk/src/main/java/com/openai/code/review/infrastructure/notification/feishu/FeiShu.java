@@ -14,14 +14,10 @@ public class FeiShu {
      * 飞书机器人webhook
      */
     private String webhook;
-    /**
-     * 发送请求的url
-     */
-    private String url;
 
 
-    public FeiShu(String url, String webhook) {
-        this.url = url;
+
+    public FeiShu(String webhook) {
         this.webhook = webhook;
     }
 
@@ -32,10 +28,8 @@ public class FeiShu {
      * @return
      */
     public String pushFeiShuMessage(TextMessageRequestDTO requestDTO) {
-        String requestUrl = this.url + "/" + this.webhook;
-        System.out.println(requestUrl);
         System.out.println(JSON.toJSONString(requestDTO));
-        String response = DefaultHttpUtils.executePostRequest(requestUrl, new HashMap<String, String>(), JSON.toJSONString(requestDTO));
+        String response = DefaultHttpUtils.executePostRequest(this.webhook, new HashMap<String, String>(), JSON.toJSONString(requestDTO));
         System.out.println("response: " + response);
         return response;
     }
@@ -48,11 +42,4 @@ public class FeiShu {
         this.webhook = webhook;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }
