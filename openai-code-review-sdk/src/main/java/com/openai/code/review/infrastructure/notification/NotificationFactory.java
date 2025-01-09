@@ -3,13 +3,14 @@ package com.openai.code.review.infrastructure.notification;
 import com.openai.code.review.infrastructure.notification.strategy.INotificationStrategy;
 import com.openai.code.review.infrastructure.notification.strategy.impl.WeiXinNotificationStrategy;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 制造通知策略的工厂类
  */
 public class NotificationFactory {
-    private static Map<String, INotificationStrategy> strategyMap;
+    private static final Map<String, INotificationStrategy> strategyMap = new HashMap<>();
 
     static {
         strategyMap.put(new WeiXinNotificationStrategy().typeName(), new WeiXinNotificationStrategy());
