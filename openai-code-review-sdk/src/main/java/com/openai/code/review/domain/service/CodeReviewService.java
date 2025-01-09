@@ -90,6 +90,7 @@ public class CodeReviewService extends AbstractCodeReviewService {
     @Override
     protected void pushNotification(String logUrl) {
         try {
+            System.out.println("获取到的通知类型：" + EnvUtils.getEnv("NOTIFICATION_TYPE"));
             INotificationStrategy notificationStrategy = NotificationFactory.getStrategy(EnvUtils.getEnv("NOTIFICATION_TYPE"));
             System.out.println("使用的推送策略:" + notificationStrategy.typeName());
             notificationStrategy.initData();
