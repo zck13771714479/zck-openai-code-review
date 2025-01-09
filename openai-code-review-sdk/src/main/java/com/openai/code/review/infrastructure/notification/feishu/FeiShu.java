@@ -32,7 +32,7 @@ public class FeiShu {
         System.out.println(JSON.toJSONString(requestDTO));
         Map<String,String> params = new HashMap<>();
         params.put("Content-Type","application/json");
-        String response = DefaultHttpUtils.executePostRequest(this.webhook, new HashMap<String, String>(), JSON.toJSONString(requestDTO));
+        String response = DefaultHttpUtils.executePostRequest(this.webhook, params, JSON.toJSONString(requestDTO));
         System.out.println("response: " + response);
         return response;
     }
