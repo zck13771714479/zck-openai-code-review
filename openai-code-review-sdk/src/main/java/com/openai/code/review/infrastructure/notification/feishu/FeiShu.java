@@ -5,6 +5,7 @@ import com.openai.code.review.infrastructure.notification.feishu.dto.TextMessage
 import com.openai.code.review.utils.DefaultHttpUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 飞书操作，发送飞书机器人消息
@@ -29,6 +30,8 @@ public class FeiShu {
      */
     public String pushFeiShuMessage(TextMessageRequestDTO requestDTO) {
         System.out.println(JSON.toJSONString(requestDTO));
+        Map<String,String> params = new HashMap<>();
+        params.put("Content-Type","application/json");
         String response = DefaultHttpUtils.executePostRequest(this.webhook, new HashMap<String, String>(), JSON.toJSONString(requestDTO));
         System.out.println("response: " + response);
         return response;
