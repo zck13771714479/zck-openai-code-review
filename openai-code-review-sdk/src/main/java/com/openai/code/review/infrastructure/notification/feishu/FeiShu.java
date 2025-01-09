@@ -29,12 +29,9 @@ public class FeiShu {
      * @return
      */
     public String pushFeiShuMessage(TextMessageRequestDTO requestDTO) {
-        System.out.println(JSON.toJSONString(requestDTO));
         Map<String,String> params = new HashMap<>();
         params.put("Content-Type","application/json");
-        String response = DefaultHttpUtils.executePostRequest(this.webhook, params, JSON.toJSONString(requestDTO));
-        System.out.println("response: " + response);
-        return response;
+        return DefaultHttpUtils.executePostRequest(this.webhook, params, JSON.toJSONString(requestDTO));
     }
 
     public String getWebhook() {
