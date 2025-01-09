@@ -20,9 +20,9 @@ public class FeiShu {
     private String url;
 
 
-    public FeiShu(String webhook, String url) {
-        this.webhook = webhook;
+    public FeiShu(String url, String webhook) {
         this.url = url;
+        this.webhook = webhook;
     }
 
     /**
